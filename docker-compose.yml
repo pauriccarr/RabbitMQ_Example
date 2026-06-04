@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"      # RabbitMQ AMQP port
+      - "15672:15672"    # RabbitMQ Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+
+
+  user_service:
+    build: ./user_service
+    container_name: user_service
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    command: python /app/user_service.py
+    volumes:
+      - ./user_service:/app
+  order_service:
+    build: ./order_service
+    container_name: order_service
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    command: python /app/order_service.py
+    volumes:
+      - ./order_service:/app
