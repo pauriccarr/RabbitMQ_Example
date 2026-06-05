@@ -1,3 +1,6 @@
+env:
+  PROJECT_ID: coen6313
+
 name: CI/CD Pipeline
 
 on:
@@ -42,9 +45,12 @@ jobs:
       - name: Deploy to Cloud Instance
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.CLOUD_HOST }}
-          username: ${{ secrets.CLOUD_USERNAME }}
-          key: ${{ secrets.CLOUD_SSH_KEY }}
+           - name: Google Cloud Auth
+             uses: 'google-github-actions/auth@v2'
+             with:
+              credentials_json: '${{ secrets.GCP_SA_KEY }}'
+              project_id: ${{ env.PROJECT_ID }}
+          
           script: |
             cd /path/to/your/app
             git pull origin main
