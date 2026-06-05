@@ -1,6 +1,7 @@
 env:
   PROJECT_ID: coen6313
-
+  TESTING_ACTIONS: true
+  
 name: CI/CD Pipeline
 
 on:
